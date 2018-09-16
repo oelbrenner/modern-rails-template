@@ -152,7 +152,6 @@ end
 def setup_gems
   setup_friendly_id
   setup_annotate
-  setup_erd
   setup_sidekiq
   setup_rubocop
   setup_brakeman
@@ -170,11 +169,6 @@ end
 def setup_annotate
   run 'rails g annotate:install'
   run 'bundle binstubs annotate'
-end
-
-def setup_erd
-  run 'rails g erd:install'
-  append_to_file '.gitignore', 'erd.pdf'
 end
 
 def setup_sidekiq
