@@ -81,8 +81,8 @@ def ask_optional_options
   @devise = yes?('Do you want to implement authentication in your app with the Devise gem?')
   @pundit = yes?('Do you want to manage authorizations with Pundit?') if @devise
   @uuid = yes?('Do you want to use UUID for active record primary?')
-  @haml = yes?('Do you want to use Haml instead of EBR?')
-  @komponent = yes?('Do you want to adopt a component based design for your front-end?')
+  @haml = yes?('Do you want to use Haml instead of ERB?')
+  @sass = yes?('Do you want to use Sass')
   @tailwind = yes?('Do you want to use Tailwind as a CSS framework?')
   @github = yes?('Do you want to push your project to Github?')
 end
@@ -90,7 +90,6 @@ end
 def install_optional_gems
   add_devise if @devise
   add_pundit if @pundit
-  add_komponent if @komponent
   add_haml if @haml
 end
 
@@ -104,14 +103,12 @@ def add_pundit
 end
 
 def add_haml
-  insert_into_file 'Gemfile', "gem 'haml'\n", after: /'friendly_id'\n/
+  insert_into_file 'Gemfile', "gem 'hamlit'\n", after: /'friendly_id'\n/
   insert_into_file 'Gemfile', "gem 'haml-rails', git: 'git://github.com/indirect/haml-rails.git'\n", after: /'friendly_id'\n/
 end
-
-def add_komponent
-  insert_into_file 'Gemfile', "gem 'komponent'\n", after: /'friendly_id'\n/
+def add_sass
+  insert_into_file 'Gemfile', "gem 'sass-rails'\n", after: /'friendly_id'\n/
 end
-
 
 
 def setup_uuid
@@ -144,15 +141,9 @@ def optional_options_front_end
 end
 
 def add_css_framework
-  run 'yarn add tailwindcss --dev'
-  run './node_modules/.bin/tailwind init app/javascript/css/tailwind.js'
-  copy_file 'app/javascript/css/application.css'
-  append_to_file 'app/javascript/packs/application.js', "import '../css/application.css';\n"
-  if @komponent
-    append_to_file '.postcssrc.yml', "  tailwindcss: './frontend/css/tailwind.js'"
-  else
-    append_to_file '.postcssrc.yml', "  tailwindcss: './app/javascript/css/tailwind.js'"
-  end
+  run 'yarn add yarn add popper.js'
+  run 'yarn add yarn add jquery'
+  run 'yarn add yarn add bootstrap'
 end
 
 
@@ -166,10 +157,10 @@ def setup_gems
   setup_rubocop
   setup_brakeman
   setup_guard
-  setup_komponent if @komponent
   setup_devise if @devise
   setup_pundit if @pundit
   setup_haml if @haml
+  setup_sass if @sass
 end
 
 def setup_friendly_id
@@ -221,18 +212,6 @@ def setup_guard
   if @komponent
     insert_into_file 'Guardfile', %q(  watch(%r{frontend/.+\.(#{rails_view_exts * '|'})$})) + "\n", after: /extensions.values.uniq\n/
   end
-end
-
-def setup_komponent
-  install_komponent
-  add_basic_components
-end
-
-def install_komponent
-  run 'rails g komponent:install --stimulus'
-  insert_into_file 'config/initializers/generators.rb', "  g.komponent stimulus: true, locale: true\n", after: /assets: false\n/
-  FileUtils.rm_rf 'app/javascript'
-  insert_into_file 'app/controllers/application_controller.rb', "  prepend_view_path Rails.root.join('frontend')\n", after: /exception\n/
 end
 
 def add_basic_components
