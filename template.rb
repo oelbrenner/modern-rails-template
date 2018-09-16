@@ -160,7 +160,6 @@ def setup_gems
   setup_devise if @devise
   setup_pundit if @pundit
   setup_haml if @haml
-  setup_sass if @sass
 end
 
 def setup_friendly_id
