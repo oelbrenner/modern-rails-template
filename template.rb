@@ -83,7 +83,7 @@ def ask_optional_options
   @uuid = yes?('Do you want to use UUID for active record primary?')
   @haml = yes?('Do you want to use Haml instead of ERB?')
   @sass = yes?('Do you want to use Sass')
-  @tailwind = yes?('Do you want to use Tailwind as a CSS framework?')
+  @bootstrap = yes?('Do you want to use Bootstrap as a CSS framework?')
   @github = yes?('Do you want to push your project to Github?')
 end
 
@@ -137,7 +137,7 @@ def add_linters
 end
 
 def optional_options_front_end
-  add_css_framework if @tailwind
+  add_css_framework if @bootstrap
 end
 
 def add_css_framework
