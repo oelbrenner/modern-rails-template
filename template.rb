@@ -141,9 +141,10 @@ def optional_options_front_end
 end
 
 def add_css_framework
-  run 'yarn add yarn add popper.js'
-  run 'yarn add yarn add jquery'
-  run 'yarn add yarn add bootstrap'
+  run 'yarn add popper.js'
+  run 'yarn add jquery'
+  run 'yarn add bootstrap'
+  run 'yarn add startbootstrap-business-casual'
 end
 
 
@@ -151,7 +152,6 @@ end
 def setup_gems
   setup_friendly_id
   setup_annotate
-  setup_bullet
   setup_erd
   setup_sidekiq
   setup_rubocop
@@ -170,15 +170,6 @@ end
 def setup_annotate
   run 'rails g annotate:install'
   run 'bundle binstubs annotate'
-end
-
-def setup_bullet
-  insert_into_file 'config/environments/development.rb', before: /^end/ do
-    <<-RUBY
-  Bullet.enable = true
-  Bullet.alert = true
-    RUBY
-  end
 end
 
 def setup_erd
